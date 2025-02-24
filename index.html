@@ -1,206 +1,529 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
-<title>数据智能Lab</title>
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据智能实验室</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
 
-    <!-- 3.6.0最新 -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+        /* 导航栏样式 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: transparent;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
 
-    <!-- bootstrap 4.6.1 -->
-    <link rel="stylesheet" href="resource/bootstrap/dist/css/bootstrap.min.css">
-    <script src="resource/bootstrap/dist/js/bootstrap.min.js"></script>
+        .logo {
+            color: rgb(255, 255, 255);
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-left: 1rem; /* 添加与logo的间距 */
+        }
 
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
 
-    <!-- tocbot 4.12.3 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.css">
-    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js"></script>
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
 
-    <!-- 引用自己的库 -->
-    <link rel="stylesheet" href="resource/css/cite.css">
-    <script src="resource/js/cite.js"></script>
-    <link rel="shortcut icon" href="resource/img/eeg-icon-black.svg">
+        /* 内容区块通用样式 */
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* 为非首页section添加padding */
+        section:not(#intro) {
+            padding: 0 5%;
+        }
+
+        .content {
+            padding: 4rem 0;
+        }
+
+        /* 轮播图样式 */
+        #intro {
+            padding: 0;
+        }
+
+        .carousel {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .carousel-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+        }
+
+        .carousel-content {
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: white;
+        }
+
+        /* 关于我们 */
+        #about-us {
+            background-color: #f4f4f4;
+            color: black;
+            text-align: center;
+        }
+
+        #about-us h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        #about-us p {
+            font-size: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 研究方向 */
+        #research {
+            background: url('img/111.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+
+        #research h2:nth-of-type(2) {
+            margin-top: 8rem;
+        }
+
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .research-card {
+            background: rgba(255, 255, 255, 0.199);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 研究成果 */
+        #publications {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('img/ai.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .gallery a {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        /* 更多按钮样式 */
+        .more-button {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background-color: #4a90e2;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .more-button:hover {
+            background-color: #357abd;
+        }
+
+        /* 团队成员 */
+        #team {
+            background:  url('img/tdcy.png');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+
+        .team-category {
+            margin-top: 3rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            justify-items: center;
+        }
+
+        .team-member {
+            background: rgba(255, 255, 255, 0);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .team-member img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .team-member h4 {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .team-member p {
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+
+        /* 联系我们 */
+        #contact {
+            background: url('img/xm2.jpg');
+            background-size: cover;
+            background-position: center;
+            color: rgb(255, 255, 255);
+            text-align: center;
+        }
+
+        #contact h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        #contact p {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        /* 页脚 */
+        footer {
+            background-color: #69b3f4;
+            color: rgb(255, 255, 255);
+            text-align: center;
+            padding: 2rem 5%;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            section:not(#intro) {
+                padding: 0 2%;
+            }
+
+            .research-grid, .gallery, .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-
-<!-- background: rgb(245,247,255); -->
-
-<body style="font-family: '微软雅黑';background-color: #ffffff;">
-
-    <div class="container">
-        <div class="row">
-            <div>
-                <a href="index.html">
-                    <img src="resource/img/lablogo.png" alt="" class="img-fluid">
-                </a>
-            </div>
+<body>
+    <nav>
+        <div style="display: flex; align-items: center;">
+            <img src="img/logo.png" alt="Fudan University Logo" style="
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                object-fit: contain;
+                background: transparent;">
+            <div class="logo">Fudan Data Intelligence Laboratory</div>
         </div>
-    </div>
-
-
-    <nav class="nav navbar-expand-md navbar-dark bg-dark">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <div class="col-12">
-                <ul class="navbar-nav offset-md-2">
-                    <li class="nav-item active col-md-2">
-                        <a class="nav-link" href="index.html">首页 <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item  col-md-2">
-                        <a class="nav-link" href="news.html">新闻动态</a>
-                    </li>
-                    <li class="nav-item  col-md-2">
-                        <a class="nav-link" href="research.html">研究论文</a>
-                    </li>
-                    <li class="nav-item  col-md-2">
-                        <a class="nav-link" href="member.html">团队成员</a>
-                    </li>
-                    <li class="nav-item  col-md-2">
-                        <a class="nav-link" href="resource.html">加入我们</a>
-                    </li>
-                </ul>
-            </div>
-
+        <div class="nav-links">
+            <a href="#intro">首页</a>
+            <a href="#research">研究方向</a>
+            <a href="#publications">研究成果</a>
+            <a href="#team">团队成员</a>
+            <a href="#contact">联系我们</a>
         </div>
     </nav>
 
-
-
-
-    <!-- 页面 -->
-    <div class="container">
-        <!-- style="max-width: 1000px;" -->
-        <!-- 轮播图 -->
-        <div id="demo" class="carousel slide" data-ride="carousel">
-
-            <!-- 指示符 -->
-            <ul class="carousel-indicators">
-                <li data-target="#demo" data-slide-to="0" class="active"></li>
-                <li data-target="#demo" data-slide-to="1"></li>
-                <li data-target="#demo" data-slide-to="2"></li>
-            </ul>
-
-            <!-- 轮播图片 -->
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="resource/img/building.jpg" class="img-fluid">
-                    <!-- <div class="carousel-caption d-none d-md-block">
-                                						<h4>First Thumbnail </h4>
-                                						<p>Cras justo odio, dapibus ac facilisis in,
-                                							egestas eget quam. Donec id elit non mi porta
-                                							gravida at eget metus. Nullam id dolor id nibh
-                                							ultricies vehicula ut id elit.</p>
-                                					</div> -->
-
-                </div>
-                <div class="carousel-item">
-                    <img src="resource/img/bding2.jpg" class="img-fluid">
-                </div>
-                <div class="carousel-item">
-                    <img src="resource/img/building.jpg" class="img-fluid">
+    <section id="intro">
+        <div class="carousel">
+            <div class="carousel-item active" style="background-image: url('img/ind.jpg')">
+                <div class="carousel-content">
+                    <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">复旦大学数据智能实验室</h1>
+                    <p style="font-size: 1.2rem;">致力于推动人工智能与数据科学的创新</p>
                 </div>
             </div>
-
-            <!-- 左右切换按钮 -->
-            <a class="carousel-control-prev" href="#demo" data-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </a>
-            <a class="carousel-control-next" href="#demo" data-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </a>
+            <div class="carousel-item" style="background-image: url('img/ai.jpg')">
+                <div class="carousel-content">
+                    <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">前沿研究</h1>
+                    <p style="font-size: 1.2rem;">探索多模态大模型与强化学习</p>
+                </div>
+            </div>
+            <div class="carousel-item" style="background-image: url('img/sjt.jpg')">
+                <div class="carousel-content">
+                    <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">卓越团队</h1>
+                    <p style="font-size: 1.2rem;">汇聚顶尖科研人才</p>
+                </div>
+            </div>
+            <div class="carousel-dots">
+                <span class="dot active" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+            </div>
         </div>
-        <br>
-        <div class="card-group card-deck">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-tit m-2 ml-2">
-                            欢迎来到数据智能实验室主页！
-                            <a href="#" class="learnMore card-link text-muted float-right mt-1 mr-1">more
-                                ></a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text brief">&nbsp;&nbsp;&nbsp;&nbsp;数据智能实验室（Data
-                            Intelligence
-                            Laboratory）窦德景教授是复旦大学特聘教授和北电数智首席科学家，也是清华大学电子工程系兼职教授，国家级人才计划入选者。此前曾担任波士顿咨询合伙人，副总裁，中国区首席数据科学家，百度研究院大数据实验室和商业智能实验室的主任，和美国俄勒冈大学计算机和信息科学系正教授（终身教职）。窦教授1996年在清华大学电子工程系本科毕业，2004年在耶鲁大学获得人工智能方向博士学位, 2012-2013年曾在斯坦福大学生物医学信息研究中心任客座副教授。窦教授在2005年建立Advanced Integration and Mining (AIM) Lab, 2018年起担任美国NSF 大（深度）学习中心（Center for Big Learning）的俄勒冈大学主任。窦教授的研究领域包括：人工智能，数据挖掘，数据整合，自然语言处理，和健康信息学。 窦教授发表了超过250篇的学术论文，（在Google Scholar被引用超过10000次）， 很多文章发表在最有声望的会议文献和学术期刊，例如AAAI, IJCAI, ICML, NeurIPS, ICLR, KDD, ICDM, ACL, EMNLP, CVPR, ICCV, CIKM, ISWC, AIJ, JMLR, TPAMI, MLJ, TKDE, TKDD, KAIS, JIIS 和Nature子刊（Sustainability）等。窦教授还是很多国际顶级会议程序委员会成员并担任过六次主要国际学术会议的程序委员会主席, 多次被NSF（美国国家科学基金）和NIH（美国国家卫生研究院）邀请作为专家评审团成员，现在是数据语义学和智能信息系统等三个学术期刊的编委会成员和AIMS ERA期刊的主编。窦教授作为主要项目负责人（PI）获得过NSF和NIH超过500万美元的研究基金，目前是AAAI, ACM, 和IEEE的高级会员，也曾是CCF AI专委会的常务委员。
-                        </p>
-                    </div>
+    </section>
+
+    <section id="research">
+        <div class="content">
+            <h2>关于我们</h2>
+            <p>我们是复旦大学数据智能实验室，致力于深度学习、计算机视觉和大数据分析等领域的前沿研究。我们的目标是将学术研究与实际应用紧密结合，推动智能科技的发展。</p>
+            <p>我们是复旦大学数据智能实验室，致力于深度学习、计算机视觉和大数据分析等领域的前沿研究。我们的目标是的发展。</p>
+            <p>我们是复旦大学数据智能实验室，致力于深度学习、计算机视觉和大数据分析等领域的前沿研究。我们的目标是将学术研究与实际应用紧密结合，推动智能科技的发展。</p>
+            <h2>研究方向</h2>
+            <div class="research-grid">
+                <div class="research-card">
+                    <h3>多模态大模型</h3>
+                    <p>深度学习算法优化与应用研究</p>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-tit m-2 ml-2">
-                            新闻动态
-                            <a href="news.html" class="learnMore card-link text-muted float-right mt-1 mr-1">more
-                                ></a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="news-i">
-                            <div class="news-item-i">
-                                <a href="https://mp.weixin.qq.com/s/dZpC4y6RBo94vjBKsnlEVw" class="news-link-i">
-                                    <div class="news-title-i">祝贺！钱锐同学命中cvpr
-                                    </div>
-                                    <div class="text-muted news-time-i">2025-03-02</div>
-                                </a>
-                            </div>
-                            <div class="news-item-i">
-                                <a href="https://mp.weixin.qq.com/s/H5ey-KA8FgslaESZmsfzoA" class="news-link-i">
-                                    <div class="news-title-i">雄健当选百度CEO</div>
-                                    <div class="news-time-i">2022-03-27</div>
-                                </a>
-                            </div>
-                            <div class="news-item-i">
-                                <a href="https://mp.weixin.qq.com/s/3PW-SEkkPViU6awCvdQLdw" class="news-link-i">
-                                    <div class="news-title-i">新闻333333333</div>
-                                    <div class="news-time-i">2025-10-20</div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                <div class="research-card">
+                    <h3>大模型安全与对抗学习</h3>
+                    <p>强化学习与大模型</p>
+                </div>
+                <div class="research-card">
+                    <h3>人工智能可解释性</h3>
+                    <p>智能决策支持系统开发</p>
                 </div>
             </div>
         </div>
-        <br>
-    </div>
+    </section>
 
-    <footer class="container-fluid" id="footer">
-        <div class="row bottomPage">
-            <div class="col-6 text-white text-center mt-3">
-                <p class="small">邮箱：dejingdou@fudan.edu.cn</p>
-                <p class="small">地址：叉二d3027</p>
+    <section id="publications">
+        <div class="content">
+            <h2>研究成果</h2>
+            <div class="gallery">
+                <a href="pub/1.pdf" download title="下载研究成果1 PDF">
+                    <img src="img/pub1.png" alt="研究成果1">
+                </a>
+                <a href="pub/1.pdf" download title="下载研究成果2 PDF">
+                    <img src="img/pub1.png" alt="研究成果2">
+                </a>
+                <a href="pub/1.pdf" download title="下载研究成果3 PDF">
+                    <img src="img/pub1.png" alt="研究成果3">
+                </a>
+                <a href="pub/1.pdf" download title="下载研究成果4 PDF">
+                    <img src="img/pub1.png" alt="研究成果4">
+                </a>
             </div>
-            <div class="col-6 text-center mt-3">
-                <small class="d-block mb-3 text-muted">Data Intelligence Laboratory @ FDU</small>
-
-                <small class="d-block mb-3 text-muted">All Rights Reserved © 2024-<div id="year"
-                        style="display: inline-block">
-                        LastYear
-                    </div></small>
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="research.html" class="more-button">查看更多</a>
             </div>
-
         </div>
+    </section>
 
+    <section id="team">
+        <div class="content">
+            <h2>团队成员</h2>
+            <div class="team-category">
+                <h3>教师</h3>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="img/ddj.jpg" alt="教师1">
+                        <h4>窦德景</h4>
+                        <p>特聘教授</p>
+                    </div>
+                </div>
+            </div>
+            <div class="team-category">
+                <h3>博士研究生</h3>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="img/male.jpg" alt="博士1">
+                        <h4>叶晶涌</h4>
+                        <p>2024级</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="img/male.jpg" alt="博士2">
+                        <h4>钱锐</h4>
+                        <p>2024级</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="img/male.jpg" alt="博士3">
+                        <h4>陈锦涛</h4>
+                        <p>2024级</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="img/pyy.png" alt="博士4">
+                        <h4>魏嘉豪</h4>
+                        <p>2025级直博</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="img/pyy.png" alt="博士5">
+                        <h4>刘佳男</h4>
+                        <p>2025级直博</p>
+                    </div>
+                </div>
+            </div>
+            <div class="team-category">
+                <h3>硕士研究生</h3>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="img/pyy.png" alt="硕士1">
+                        <h4>李芊帅</h4>
+                        <p>2024级</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="img/pyy.png" alt="硕士2">
+                        <h4>熊健</h4>
+                        <p>2024级</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="img/pyy.png" alt="硕士3">
+                        <h4>邓传航</h4>
+                        <p>2024级</p>
+                    </div>
+                </div>
+            </div>
+            <div class="team-category">
+                <h3>本科生</h3>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="img/male.jpg" alt="本科1">
+                        <h4>薛佳音</h4>
+                        <p>计算机拔尖班</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" style="background-color: #0f2cd4a7;">
+        <div class="content">
+            <h2>联系我们</h2>
+            <p style="margin-top: 1rem;">
+                📍 地址：复旦大学江湾校区交叉信息二号楼A3025<br>
+                📧 邮箱：doudejing@fudan.edu.cn<br>
+                ☎ 电话：+86-XXX-XXXXXXX
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2024 数据智能实验室 版权所有</p>
     </footer>
 
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+        const dots = document.querySelectorAll('.dot');
 
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                dots[i].classList.remove('active');
+                if (i === index) {
+                    slide.classList.add('active');
+                    dots[i].classList.add('active');
+                }
+            });
+        }
+
+        function currentSlide(n) {
+            slideIndex = n;
+            showSlide(slideIndex);
+        }
+
+        function autoSlide() {
+            slideIndex = (slideIndex + 1) % slides.length;
+            showSlide(slideIndex);
+        }
+
+        setInterval(autoSlide, 5000);
+        showSlide(slideIndex);
+    </script>
 </body>
-
-<script language="javascript" type="text/javascript">
-    add_head_id();
-
-    tocify();
-
-    footer_year();
-</script>
-
-
 </html>

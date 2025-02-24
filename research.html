@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
-<title>数据智能Lab</title>
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据智能实验室 研究成果</title>
 
-    <!-- 3.6.0最新 -->
+    <!-- jQuery 3.6.0 -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 
-    <!-- bootstrap 4.6.1 -->
+    <!-- Bootstrap 4.6.1 -->
     <link rel="stylesheet" href="resource/bootstrap/dist/css/bootstrap.min.css">
     <script src="resource/bootstrap/dist/js/bootstrap.min.js"></script>
 
-    <!-- tocbot 4.12.3 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.css">
-    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js"></script>
-    <!-- 引用自己的库 -->
-    <link rel="stylesheet" href="resource/css/cite.css">
-
-    <script src="resource/js/cite.js"></script>
-    <link rel="shortcut icon" href="resource/img/eeg-icon-black.svg">
+    <style>
+        .pagination-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .paper-entry {
+            display: none; /* Hidden by default, shown via JS */
+        }
+        .paper-entry.active {
+            display: block; /* Show only the active page */
+        }
+    </style>
 </head>
 
-<body style="font-family: '微软雅黑';background-color: #ffffff;">
-
+<body style="font-family: '微软雅黑'; background-color: #ffffff;">
     <div class="container">
         <div class="row">
             <div>
@@ -46,19 +46,7 @@
             <div class="col-12">
                 <ul class="navbar-nav offset-md-2">
                     <li class="nav-item col-md-2">
-                        <a class="nav-link" href="index.html">首页 <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item  col-md-2">
-                        <a class="nav-link" href="news.html">新闻动态</a>
-                    </li>
-                    <li class="nav-item  col-md-2 active">
-                        <a class="nav-link" href="research.html">研究领域</a>
-                    </li>
-                    <li class="nav-item  col-md-2">
-                        <a class="nav-link" href="member.html">团队成员</a>
-                    </li>
-                    <li class="nav-item  col-md-2">
-                        <a class="nav-link" href="resource.html">加入我们</a>
+                        <a class="nav-link" href="index.html">返回首页 <span class="sr-only"></span></a>
                     </li>
                 </ul>
             </div>
@@ -69,27 +57,37 @@
         <div class="row">
             <div class="col-2"></div>
             <div class="col-8 js-toc-content">
-                <h2>Brain Computer Interface</h2>
+                <!-- Papers grouped by year, each year is a separate "page" -->
+                <div class="paper-entry" data-page="1">
+                    <h2>2024</h2>
+                    <h3>Shuangli Li, Jingbo Zhou, Tong Xu, Liang Huang, Fan Wang, Haoyi Xiong, Weili Huang, Dejing Dou, Hui Xiong:
+                        Structure-aware Interactive Graph Neural Networks for the Prediction of Protein-Ligand Binding Affinity.
+                        IN ACM SIGKDD International Conference on Knowledge Discovery and Data Mining.</h3>
+                    <p><a href="pub/1.pdf" class="btn btn-primary" download>PDF</a></p>
+                    <h3>Emotion Recognition</h3>
+                    <p><a href="path/to/emotion-paper.pdf" class="btn btn-primary" download>PDF</a></p>
+                </div>
 
-                <h3>Shuangli Li,, Jingbo Zhou,Tong Xu1,Liang Huang, Fan Wang,Haoyi Xiong, Weili Huang, Dejing Dou, Hui Xiong:
-                    Structure-aware Interactive Graph Neural Networks for the Prediction of Protein-Ligand Binding Affinity.
-                    IN ACM SIGKDD International Conference on Knowledge Discovery and Data Mining.</h3>
-                <p><a href="publication/paper.pdf" class="btn btn-primary" download>PDF</a></p>
+                <div class="paper-entry" data-page="2">
+                    <h2>2023</h2>
+                    <h3>Face Emotion Recognition</h3>
+                    <p><a href="path/to/face-emotion-paper.pdf" class="btn btn-primary" download>PDF</a></p>
+                </div>
 
-                <h3>Emotion</h3>
-                <p><a href="path/to/emotion-paper.pdf" class="btn btn-primary" download>PDF</a></p>
+                <div class="paper-entry" data-page="3">
+                    <h2>2022 and Previous Papers</h2>
+                    <h3>Paper Title 1</h3>
+                    <p><a href="path/to/nlp-paper1.pdf" class="btn btn-primary" download>PDF</a></p>
+                    <h3>Paper Title 2</h3>
+                    <p><a href="path/to/nlp-paper2.pdf" class="btn btn-primary" download>PDF</a></p>
+                </div>
 
-                <h2>Computer Vision</h2>
-                <h3>Face Emotion</h3>
-                <p><a href="path/to/face-emotion-paper.pdf" class="btn btn-primary" download>PDF</a></p>
-
-                <h2>Natural Language Processing</h2>
-                <h3>Paper Title 1</h3>
-                <p><a href="path/to/nlp-paper1.pdf" class="btn btn-primary" download>PDF</a></p>
-
-                <h3>Paper Title 2</h3>
-                <p><a href="path/to/nlp-paper2.pdf" class="btn btn-primary" download>PDF</a></p>
-
+                <!-- Pagination Controls -->
+                <div class="pagination-container">
+                    <button id="prevBtn" class="btn btn-secondary" disabled>上一页</button>
+                    <span id="pageInfo" class="mx-3"></span>
+                    <button id="nextBtn" class="btn btn-secondary">下一页</button>
+                </div>
             </div>
             <div class="col-mb-12 col-2 kit-hidden-tb post-toc-content">
                 <div id="toc-container" class="post-toc">
@@ -102,28 +100,51 @@
     <footer class="container-fluid" id="footer">
         <div class="row bottomPage">
             <div class="col-6 text-white text-center mt-3">
-                <p class="small">邮箱：doudejing@fudan.edu.cn</p>
+                <p class="small">邮箱：<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="14303b2130313e3d3a3314322130353a7a3130217a373a">[email&#160;protected]</a></p>
                 <p class="small">地址：复旦大学江湾校区交叉学科二号楼</p>
             </div>
             <div class="col-6 text-center mt-3">
                 <small class="d-block mb-3 text-muted">Data Intelligence Laboratory @ FDU</small>
-
-                <small class="d-block mb-3 text-muted">All Rights Reserved © 2024-<div id="year"
-                        style="display: inline-block">
-                        LastYear
-                    </div></small>
+                <small class="d-block mb-3 text-muted">All Rights Reserved © 2024-<div id="year" style="display: inline-block">LastYear</div></small>
             </div>
         </div>
     </footer>
 
+    <script>
+        // Pagination Logic
+        const papers = document.querySelectorAll('.paper-entry');
+        const totalPages = papers.length;
+        let currentPage = 1;
+
+        function updatePage() {
+            papers.forEach(paper => {
+                paper.classList.remove('active');
+                if (parseInt(paper.getAttribute('data-page')) === currentPage) {
+                    paper.classList.add('active');
+                }
+            });
+
+            document.getElementById('pageInfo').textContent = `第 ${currentPage} 页 / 共 ${totalPages} 页`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePage();
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePage();
+            }
+        });
+
+        // Initialize the first page
+        updatePage();
+    </script>
 </body>
-
-<script language="javascript" type="text/javascript">
-    add_head_id();
-
-    tocify();
-
-    footer_year();
-</script>
-
 </html>
